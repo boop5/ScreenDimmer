@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="ScreenDimmer.Ui.Controls.ColorPicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:ScreenDimmer.Ui.Controls" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Color}">
+    
+    <Grid HorizontalAlignment="Stretch">
+        <Grid.Resources>
+            <Style x:Key="EzSliderGridStyle" TargetType="{x:Type Grid}">
+                <Setter Property="Margin" Value="10, 0" />
+            </Style>
+            <Style TargetType="{x:Type Grid}" BasedOn="{StaticResource EzSliderGridStyle}"/>
+        </Grid.Resources>
+           <Grid.ColumnDefinitions>
+               <ColumnDefinition Width="*" />
+               <ColumnDefinition Width="*" />
+               <ColumnDefinition Width="*" />
+           </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Height="50">
+            <controls:EzSlider SliderValue="{Binding R, Mode=TwoWay, NotifyOnTargetUpdated=True}" SliderName="R" SliderMin="0" SliderMax="255" SliderTickFrequency="10" />
+        </Grid>
+        <Grid Grid.Column="1" Height="50">
+            <controls:EzSlider SliderValue="{Binding G, Mode=TwoWay, NotifyOnTargetUpdated=True}" SliderName="G" SliderMin="0" SliderMax="255" SliderTickFrequency="10" />
+        </Grid>
+        <Grid Grid.Column="2" Height="50">
+            <controls:EzSlider SliderValue="{Binding B, Mode=TwoWay, NotifyOnTargetUpdated=True}" SliderName="B" SliderMin="0" SliderMax="255" SliderTickFrequency="10" />
+        </Grid>
+    </Grid>
+</UserControl>

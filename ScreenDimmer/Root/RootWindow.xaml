@@ -1,0 +1,119 @@
+﻿<Window x:Class="ScreenDimmer.Root.RootWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:root="clr-namespace:ScreenDimmer.Root"
+        xmlns:controls="clr-namespace:ScreenDimmer.Ui.Controls"
+        xmlns:screen="clr-namespace:ScreenDimmer.Screen"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance root:RootContext}"
+        WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Visibility="{Binding Visibility, Mode=TwoWay}" Topmost="True"
+        Title="ScreenDimmer" Height="300" Width="600">
+    <Window.Resources>
+
+        <Style x:Key="ItemsControlStyle" TargetType="{x:Type ItemsControl}">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+
+        <Style x:Key="ItemContainerStyle" TargetType="{x:Type ContentPresenter}">
+            <Setter Property="DataContext" Value="{Binding RelativeSource={RelativeSource Self}}" />
+        </Style>
+
+        <DataTemplate x:Key="DisplayText">
+            <TextBlock Name="DisplayNameText"
+                       FontWeight="Bold" FontSize="12"
+                       Foreground="{Binding Dye.Brush, FallbackValue={x:Static Brushes.DarkSlateGray}}"
+                       Padding="0" Margin="0,5"
+                       d:DataContext="{d:DesignInstance screen:ScreenDataObject}">
+                <Run Text="{Binding DeviceName, Mode=OneWay, FallbackValue=Unknown Screen}" />
+                <Run>
+                    <Run.Style>
+                        <Style TargetType="{x:Type Run}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsPrimary}" Value="False">
+                                    <Setter Property="Text" Value="" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsPrimary}" Value="True">
+                                    <Setter Property="Text" Value="(Primary)" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Run.Style>
+                </Run>
+            </TextBlock>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ListBoxItemTemplate">
+            <Grid d:DataContext="{d:DesignInstance screen:ScreenDataObject}" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <ContentPresenter ContentTemplate="{StaticResource DisplayText}" />
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0">
+                        <controls:EzSlider SliderValue="{Binding Dim100, Mode=TwoWay}"
+                                           SliderName="Dim" SliderMin="0" SliderMax="95"
+                                           SliderTickFrequency="20" SliderSmallChange="1" SliderLargeChange="5" />
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <controls:ColorPicker DataContext="{Binding Dye, NotifyOnTargetUpdated=True}" />
+                    </Grid>
+                </Grid>
+
+            </Grid>
+        </DataTemplate>
+
+        <Style x:Key="TitleBarTextStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+        </Style>
+        
+        <Style x:Key="TitleBarCloseButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Content" Value="X" />
+            <Setter Property="Width" Value="40" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        
+        <Style x:Key="RootContentStyle" TargetType="{x:Type StackPanel}">
+            <Setter Property="Background" Value="#efefef" />
+        </Style>
+        
+        <Style x:Key="TitleBarStyle" TargetType="{x:Type Grid}">
+            <Setter Property="Background" Value="DarkSlateGray" />
+        </Style>
+
+    </Window.Resources>
+
+    <StackPanel Style="{StaticResource RootContentStyle}">
+        <Grid Style="{StaticResource TitleBarStyle}" MouseLeftButtonDown="OnLeftMouseButtonDown">
+            <TextBlock Text="ScreenDimmer" Style="{StaticResource TitleBarTextStyle}" />
+            <Button Style="{StaticResource TitleBarCloseButtonStyle}" Command="{Binding CloseCommand}" />
+        </Grid>
+
+        <ItemsControl ItemsSource="{Binding Screens}"
+                      Style="{DynamicResource ItemsControlStyle}"
+                      ItemTemplate="{StaticResource ListBoxItemTemplate}"
+                      ItemContainerStyle="{StaticResource ItemContainerStyle}" />
+    </StackPanel>
+</Window>

@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="ScreenDimmer.Ui.Controls.EzSlider" x:Name="EzSliderControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+    <Grid HorizontalAlignment="Stretch">
+        <StackPanel DataContext="{Binding ElementName=EzSliderControl}" HorizontalAlignment="Stretch">
+            <TextBlock FontWeight="Bold" FontSize="12" Margin="4,0,0,0">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} {1}">
+                        <Binding Path="SliderName" />
+                        <Binding Path="SliderValue" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            
+            <Slider Value="{Binding SliderValue}" 
+                    Minimum="{Binding SliderMin, FallbackValue=0}" 
+                    Maximum="{Binding SliderMax, FallbackValue=100}" 
+                    TickFrequency="{Binding SliderTickFrequency, FallbackValue=10}"
+                    SmallChange="{Binding SliderSmallChange, FallbackValue=1}" 
+                    LargeChange="{Binding SliderLargeChange, FallbackValue=5}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
